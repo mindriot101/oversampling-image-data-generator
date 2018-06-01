@@ -9,6 +9,7 @@ assert keras.__version__ == '2.1.5'
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator, NumpyArrayIterator
 import itertools
+import time
 import keras
 
 
@@ -79,13 +80,19 @@ if __name__ == '__main__':
     gen = generator.flow(X, y, batch_size=batch_size)
 
     n_iter = 10
-    for i in range(10):
+    start_time = time.time()
+
+    while True:
         _, y_batch = next(gen)
         idx = np.where(y_batch == 0)[0]
         n_0 = idx.size
         n_target = batch_size // 2
 
-        msg = f'Iteration {i + 1}/{n_iter}: class size for 0 is {n_0}, should be {n_target}'
+        msg = f'Class size for 0 is {n_0}, should be {n_target}'
 
         assert  n_0 == batch_size // 2, msg
 
+        if (time.time() - start_time) > 10:
+            break
+
+        
