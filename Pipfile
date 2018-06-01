@@ -10,6 +10,7 @@ tensorflow = "*"
 [dev-packages]
 ipython = "*"
 ipdb = "*"
+pudb = "*"
 
 [requires]
 python_version = "3.6"
