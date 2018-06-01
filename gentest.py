@@ -8,6 +8,7 @@ import keras
 assert keras.__version__ == '2.1.5'
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator, NumpyArrayIterator
+import itertools
 import keras
 
 
@@ -32,14 +33,7 @@ class CustomArrayIterator(NumpyArrayIterator):
             self.good_idx = np.where(y == 0)[0]
             self.defect_idx = np.where(y == 1)[0]
 
-    def _get_batches_of_transformed_samples(self, index_array):
-        print('CUSTOM BATCH')
-        print(index_array)
-        return super(CustomArrayIterator, self)._get_batches_of_transformed_samples(index_array)
-
-
     def _flow_index(self):
-        print('CALLING FLOW INDEX!!!')
         self.reset()
         self._set_index_array()
         while True:
@@ -54,7 +48,8 @@ class CustomArrayIterator(NumpyArrayIterator):
             idx = np.random.permutation(idx)
 
             self.total_batches_seen += 1
-            yield self._get_batches_of_transformed_samples(idx)
+            yield idx
+
 
 class CustomGenerator(ImageDataGenerator):
     def flow(self, x, y=None, batch_size=32, shuffle=True, seed=None,
@@ -70,7 +65,6 @@ class CustomGenerator(ImageDataGenerator):
                 subset=subset)
 
 
-
 if __name__ == '__main__':
 
 
@@ -78,7 +72,6 @@ if __name__ == '__main__':
     shape = (200, 32, 32, 1)
     X = np.random.uniform(0., 1., size=shape)
     y = np.zeros(n_images, dtype=int)
-
     y[:20] = 1
     
     batch_size = 32
@@ -88,7 +81,7 @@ if __name__ == '__main__':
     n_iter = 10
     for i in range(10):
         _, y_batch = next(gen)
-        idx = y_batch == 0
+        idx = np.where(y_batch == 0)[0]
         n_0 = idx.size
         n_target = batch_size // 2
 
