@@ -1,12 +1,30 @@
+'''
+Oversampling ImageDataGenerator
+
+This module provides a single class: OversamplingGenerator. This draws random
+batches from a given pair of X/y numpy arrays, whilst ensuring complete class
+balance for the batch.
+
+Note: this class only works for binary classification.
+
+See the class documentation for more information.
+'''
+
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator, NumpyArrayIterator
 
 
 def is_onehot(y):
+    '''
+    Determine if an array of labels is encoded with one-hot encoding
+    '''
     return len(y.shape) == 2
 
 
 class OversamplingArrayIterator(NumpyArrayIterator):
+    '''
+    Wrapper around NumpyArrayIterator which yields balanced batches.
+    '''
     def __init__(self, *args, **kwargs):
         super(OversamplingArrayIterator, self).__init__(*args, **kwargs)
 
@@ -44,14 +62,19 @@ class OversamplingArrayIterator(NumpyArrayIterator):
 
 
 class OversamplingGenerator(ImageDataGenerator):
+    '''
+    Generate random batches of data with balanced classes.
+
+    Note: this class only works for binary classification.
+    '''
     def flow(self, x, y=None, batch_size=32, shuffle=True, seed=None,
-            save_to_dir=None, save_prefix='', save_format='png', subset=None):
+             save_to_dir=None, save_prefix='', save_format='png', subset=None):
         return OversamplingArrayIterator(x, y, self,
-                batch_size=batch_size,
-                shuffle=shuffle,
-                seed=seed,
-                data_format=self.data_format,
-                save_to_dir=save_to_dir,
-                save_prefix=save_prefix,
-                save_format=save_format,
-                subset=subset)
+                                         batch_size=batch_size,
+                                         shuffle=shuffle,
+                                         seed=seed,
+                                         data_format=self.data_format,
+                                         save_to_dir=save_to_dir,
+                                         save_prefix=save_prefix,
+                                         save_format=save_format,
+                                         subset=subset)
