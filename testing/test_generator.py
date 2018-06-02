@@ -1,5 +1,5 @@
 import numpy as np
-from gentest import OversamplingGenerator
+from oversampling_image_data_generator import OversamplingGenerator
 
 
 def test_onehot():
