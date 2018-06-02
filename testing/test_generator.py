@@ -14,17 +14,14 @@ def test_onehot():
     generator = OversamplingGenerator()
     gen = generator.flow(X, y, batch_size=batch_size)
 
-    n_iter = 10
+    _, y_batch = next(gen)
+    idx = np.where(y_batch[:, 0] == 0)[0]
+    n_0 = idx.size
+    n_target = batch_size // 2
 
-    for _ in range(n_iter):
-        _, y_batch = next(gen)
-        idx = np.where(y_batch[:, 0] == 0)[0]
-        n_0 = idx.size
-        n_target = batch_size // 2
+    msg = f'Class size for 0 is {n_0}, should be {n_target}'
 
-        msg = f'Class size for 0 is {n_0}, should be {n_target}'
-
-        assert  n_0 == batch_size // 2, msg
+    assert  n_0 == batch_size // 2, msg
 
 def test_not_onehot():
     n_images = 200
@@ -37,14 +34,11 @@ def test_not_onehot():
     generator = OversamplingGenerator()
     gen = generator.flow(X, y, batch_size=batch_size)
 
-    n_iter = 10
+    _, y_batch = next(gen)
+    idx = np.where(y_batch == 0)[0]
+    n_0 = idx.size
+    n_target = batch_size // 2
 
-    for _ in range(n_iter):
-        _, y_batch = next(gen)
-        idx = np.where(y_batch == 0)[0]
-        n_0 = idx.size
-        n_target = batch_size // 2
+    msg = f'Class size for 0 is {n_0}, should be {n_target}'
 
-        msg = f'Class size for 0 is {n_0}, should be {n_target}'
-
-        assert  n_0 == batch_size // 2, msg
+    assert  n_0 == batch_size // 2, msg
