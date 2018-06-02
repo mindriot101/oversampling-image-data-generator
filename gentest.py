@@ -36,7 +36,7 @@ class OversamplingArrayIterator(NumpyArrayIterator):
             self.defect_idx = np.where(y[:, 1] == 1)[0]
         else:
             n_classes = np.unique(y)
-            if n_classes != 2:
+            if len(n_classes) != 2:
                 raise ValueError('Only binary classification is supported')
 
             self.good_idx = np.where(y == 0)[0]
