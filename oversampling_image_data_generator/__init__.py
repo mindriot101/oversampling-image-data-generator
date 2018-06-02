@@ -14,31 +14,23 @@ def is_onehot(y):
     return len(y.shape) == 2
 
 class OversamplingArrayIterator(NumpyArrayIterator):
-    def __init__(self, x, y, image_data_generator,
-            batch_size=32, shuffle=False, seed=None,
-            data_format=None, save_to_dir=None,
-            save_prefix='', save_format='png',
-            subset=None):
-        super(OversamplingArrayIterator, self).__init__(x, y, image_data_generator,
-                batch_size=batch_size, shuffle=shuffle, seed=seed,
-                data_format=data_format, save_to_dir=save_to_dir,
-                save_prefix=save_prefix, save_format=save_format,
-                subset=subset)
+    def __init__(self, *args, **kwargs):
+        super(OversamplingArrayIterator, self).__init__(*args, **kwargs)
 
-        if is_onehot(y):
-            n_classes = y.shape[1]
+        if is_onehot(self.y):
+            n_classes = self.y.shape[1]
             if n_classes != 2:
                 raise ValueError('Only binary classification is supported')
 
-            self.good_idx = np.where(y[:, 0] == 1)[0]
-            self.defect_idx = np.where(y[:, 1] == 1)[0]
+            self.good_idx = np.where(self.y[:, 0] == 1)[0]
+            self.defect_idx = np.where(self.y[:, 1] == 1)[0]
         else:
-            n_classes = np.unique(y)
+            n_classes = np.unique(self.y)
             if len(n_classes) != 2:
                 raise ValueError('Only binary classification is supported')
 
-            self.good_idx = np.where(y == 0)[0]
-            self.defect_idx = np.where(y == 1)[0]
+            self.good_idx = np.where(self.y == 0)[0]
+            self.defect_idx = np.where(self.y == 1)[0]
 
     def _flow_index(self):
         self.reset()
