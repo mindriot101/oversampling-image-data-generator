@@ -1,17 +1,10 @@
-# Set up keras to use tensorflow
-import os
-os.environ['KERAS_BACKEND'] = 'tensorflow'
-
-import keras
-assert keras.__version__ == '2.1.5'
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator, NumpyArrayIterator
-import itertools
-import keras
 
 
 def is_onehot(y):
     return len(y.shape) == 2
+
 
 class OversamplingArrayIterator(NumpyArrayIterator):
     def __init__(self, *args, **kwargs):
